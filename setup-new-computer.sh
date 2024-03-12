@@ -612,10 +612,11 @@ printDivider
         read -p 'What is your Git display name (Firstname Lastname)?: ' gitName
         git config --global user.name "$gitName"
     fi
-printDivider
-    echo "✔ Configure git to always ssh when dealing with https github repos"
-        git config --global url."git@github.com:".insteadOf https://github.com/
-        # you can remove this change by editing your ~/.gitconfig file
+## Disabled: this disrupts the second part of the script
+#printDivider
+#    echo "✔ Configure git to always ssh when dealing with https github repos"
+#        git config --global url."git@github.com:".insteadOf https://github.com/
+#        # you can remove this change by editing your ~/.gitconfig file
 printDivider
     echo "✔ Creating .ssh directory in home folder [~/.ssh]"
         mkdir -p ~/go

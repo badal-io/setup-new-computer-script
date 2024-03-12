@@ -52,11 +52,9 @@ After you have run the script, please complete the following steps to finish set
    
    <br>
 
-2. **Vendasta specific tools**\
+2. **Badal Specific Setup**\
    Follow our onboarding document to complete your setup:
-   - [Onboarding New Developers - Setup New Developer’s Computer - Next Steps][nextsteps]
-   
-   [nextsteps]: https://vendasta.jira.com/wiki/spaces/RD/pages/199032984/Onboarding+New+Developers#New-Dev%5BhardBreak%5DSetup-New-Developer%E2%80%99s-Computer-with-a-script
+   - Placeholder: this will link to a confluence page, but I don't see anything that exists yet
 
 <br><br>
 
@@ -74,18 +72,10 @@ You can fix this by running the following command in your terminal:
 compaudit | xargs chmod g-w
 ```
 
-<br>
-
-**Setting Up Pycharm with Python 2.7**\
-As Mac OS has recently removed the bundled copy of Python 2.7, please see [this help document on working with our Legacy Appengine projects](https://vendasta.jira.com/wiki/spaces/RD/pages/1688469847/Pycharm+Setup+for+Legacy+Appengine+Python+2.7)
-
-<br>
-
-
 **Installing and Upgrading Node and NPM versions**\
 There is a handy command in your `.bash_profile` and `.zsh_profile` that will automatically install your chosen version of Node and NPM, re-install any global npm packages (like angular cli), and set the newly installed version as default.
 
-We use Node v20 at Vendasta. To upgrade to the latest version of Node 20, re-install global npm packages, and set it as default, run the following command:
+To upgrade to the latest version of Node 20, re-install global npm packages, and set it as default, run the following command:
 ```sh
 node-upgrade 20
 ```
@@ -647,20 +637,6 @@ defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool t
 ```
 </details>
 
-
-
-### Set up Git
-
-<details>
-  <summary>Configure git to always ssh when dealing with https github repos</summary>
-  
-```sh
-git config --global url."git@github.com:".insteadOf https://github.com/
-# you can remove this change by editing your ~/.gitconfig file
-```
-</details>
-
-
 <details>
   <summary>Set Git to store credentials in Keychain</summary>
   
@@ -700,13 +676,11 @@ fi
 
 ## Tips for using the script at your own company
 
-This script helps new developers at Vendasta setup their laptops quicker, letting them hit the ground running. Before, it could take 2-5 days to install and configure everything, leading to a frustrating first week. With this script and fast internet, the process can be done in under 30 min.
+This script helps new developers at Badal-IO setup their laptops quicker.
 	   
 I have tried to make this script simple and useful. You will want to customize the installation and configuration to match the tools and services you use at your company.
 	   
-- At Vendasta, we are using Go, Angular, and Google Cloud. You most likely do not use all of these, so remove, change, and tweak to meet your needs.
-- We lock our Node version at 20 (using NVM) for best compatibility with Angular and NX. You will likely want to change this. 
-- To customize the [welcome logo](https://github.com/vendasta/setup-new-computer-script/blob/47b7c97f21b293e143a0566cafecec2cfc69c528/setup-new-computer.sh#L74-L90) and add a bit of style, I used the handy [Text to ASCII Art Generator](https://patorjk.com/software/taag/#p=testall&f=Isometric1&t=Vendasta)
+- To customize the [welcome logo](https://github.com/badal-io/setup-new-computer-script/blob/47b7c97f21b293e143a0566cafecec2cfc69c528/setup-new-computer.sh#L74-L90) and add a bit of style, I used the handy [Text to ASCII Art Generator](https://patorjk.com/software/taag/#p=testall&f=Isometric1&t=Vendasta)
 - When you update the script, remember to update the readme "What's Installed" section too
 - Be sure to update both the `.bash_profile` and `.zprofile`
 - This is MIT licensed, so be sure to include the [LICENSE file](https://github.com/vendasta/setup-new-computer-script/blob/master/LICENSE)
