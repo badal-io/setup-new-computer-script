@@ -37,5 +37,5 @@ exitscript () {
     local errorcode="${1:-1}"
     shift
     echo "     Error: $@\n"
-    exitscript $errorcode
+    exit $errorcode
 }
