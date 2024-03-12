@@ -1,5 +1,5 @@
 # Setup a New Developer Computer
-This script will help with the quick setup and installation of tools and applications for new developers at Vendasta. Tested in Mac OS 10.14 to 12. This script works on both Intel and M1/M2 Macs. 
+This script will help with the quick setup and installation of tools and applications for new developers at Badal-IO. Tested in Mac OS 10.14 to 12. This script works on both Intel and M1/M2 Macs. 
 
 You can run this script multiple times without issue. You can also run it on a partially set-up computer and it will only install what is missing.
 
@@ -15,7 +15,7 @@ Looking to use this script at your own company? Check out the [tips for using th
 
 Paste the command below in a Mac OS Terminal:
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vendasta/setup-new-computer-script/master/setup-new-computer.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/badal-io/setup-new-computer-script/master/setup-new-computer.sh)"
 ```
 
 ## Manual Install Instructions
@@ -173,8 +173,6 @@ fi
 	source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
 
 # Golang
-export GOPRIVATE="github.com/vendasta"
-export GOPROXY="direct"
 export GO111MODULE="on"
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
@@ -239,9 +237,6 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 [ -e "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ] &&     source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 
 # Golang
-export GOPRIVATE="github.com/vendasta"
-export GOPROXY="direct"
-export GO111MODULE="on"
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
@@ -330,7 +325,6 @@ node-upgrade() {
    ```sh
    mkdir -p ~/go
    brew install go
-   go env -w GOPRIVATE="github.com/vendasta"
    ```
 </details>
 
