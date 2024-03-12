@@ -15,7 +15,7 @@ Looking to use this script at your own company? Check out the [tips for using th
 
 Paste the command below in a Mac OS Terminal:
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/badal-io/setup-new-computer-script/master/setup-new-computer.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/badal-io/setup-new-computer-script/main/setup-new-computer.sh)"
 ```
 
 ## Manual Install Instructions
@@ -101,7 +101,7 @@ nvm use --lts
 nvm use 18          # or 10.10.0, 8.9.1, etc
 ```
 
-[nvm docs]: https://github.com/nvm-sh/nvm/blob/master/README.md#usage
+[nvm docs]: https://github.com/nvm-sh/nvm/blob/main/README.md#usage
 
 <br>
   
@@ -677,7 +677,7 @@ I have tried to make this script simple and useful. You will want to customize t
 - To customize the [welcome logo](https://github.com/badal-io/setup-new-computer-script/blob/47b7c97f21b293e143a0566cafecec2cfc69c528/setup-new-computer.sh#L74-L90) and add a bit of style, I used the handy [Text to ASCII Art Generator](https://patorjk.com/software/taag/#p=testall&f=Isometric1&t=Vendasta)
 - When you update the script, remember to update the readme "What's Installed" section too
 - Be sure to update both the `.bash_profile` and `.zprofile`
-- This is MIT licensed, so be sure to include the [LICENSE file](https://github.com/vendasta/setup-new-computer-script/blob/master/LICENSE)
+- This is MIT licensed, so be sure to include the [LICENSE file](https://github.com/vendasta/setup-new-computer-script/blob/main/LICENSE)
 - Let me know! It is good to know if you find this helpful
 
 
