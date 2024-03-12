@@ -50,3 +50,11 @@ ___.                .___        .__          .__
     pressing CONTROL+C a bunch
 EOT
 }
+
+exitscript () {
+    # Exit the script with an error, cleaning up resources along the way
+    local errorcode="${1:-1}"
+    shift
+    echo "     Error: $@\n"
+    exitscript $errorcode
+}
