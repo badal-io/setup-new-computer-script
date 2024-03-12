@@ -73,15 +73,16 @@ printStep() {
 
 printLogo() {
 cat << "EOT"
-                      _           _        
-                     | |         | |       
- __   _____ _ __   __| | __ _ ___| |_ __ _ 
- \ \ / / _ \ '_ \ / _` |/ _` / __| __/ _` |
-  \ V /  __/ | | | (_| | (_| \__ \ || (_| |
-   \_/ \___|_| |_|\__,_|\__,_|___/\__\__,_|
- ------------------------------------------
+___.                .___        .__          .__          
+\_ |__  _____     __| _/_____   |  |         |__|  ____   
+ | __ \ \__  \   / __ | \__  \  |  |   ______|  | /  _ \  
+ | \_\ \ / __ \_/ /_/ |  / __ \_|  |__/_____/|  |(  <_> ) 
+ |___  /(____  /\____ | (____  /|____/       |__| \____/  
+     \/      \/      \/      \/                           
+                                                          
     Q U I C K   S E T U P   S C R I P T
 
+    Largely lifted from Vendasta's script of the same name originally by Joel Kesler, with some additions and modifications
 
     NOTE:
     You can exit the script at any time by
@@ -622,7 +623,23 @@ printDivider
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 printDivider
 
+#===============================================================================
+# Badal.io specific steps
+#===============================================================================
 
+exitscript () {
+    # Exit the script with an error, cleaning up resources along the way
+    local errorcode="${1:-1}"
+    shift
+    echo "     Error: $@\n"
+    exitscript $errorcode
+}
+
+printHeading "Specific installation steps for badal.io"
+
+printDivider
+    git clone https://github.com/badal-io/setup-new-computer-script.git || exitscript 1 "Can't grab badal specific script with git!"
+    . setup-new-computer-script/badal-io.sh || exitscript 1 "error executing badal-io.sh"
 
 #===============================================================================
 #  Installer: Complete
