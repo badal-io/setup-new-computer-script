@@ -9,6 +9,7 @@ fi
 
 printStep "Adding Hashicorp tap" "brew tap hashicorp/tap" || exitscript 1
 printStep "Installing Terraform" "brew install terraform" || exitscript 1
+printStep "Installing vault" "brew install vault" || exitscript 1
 #if [[ "\$(uname -p)" == "arm" ]]; then
 #    printStep "Installing kubectl" 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl' || exitscript 1
 #else
