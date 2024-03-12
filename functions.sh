@@ -32,25 +32,6 @@ printStep() {
     $2 || printError "$1"
 }
 
-printLogo() {
-cat << "EOT"
-___.                .___        .__          .__          
-\_ |__  _____     __| _/_____   |  |         |__|  ____   
- | __ \ \__  \   / __ | \__  \  |  |   ______|  | /  _ \  
- | \_\ \ / __ \_/ /_/ |  / __ \_|  |__/_____/|  |(  <_> ) 
- |___  /(____  /\____ | (____  /|____/       |__| \____/  
-     \/      \/      \/      \/                           
-                                                          
-    Q U I C K   S E T U P   S C R I P T
-
-    Largely lifted from Vendasta's script of the same name, with some additions and modifications
-
-    NOTE:
-    You can exit the script at any time by
-    pressing CONTROL+C a bunch
-EOT
-}
-
 exitscript () {
     # Exit the script with an error, cleaning up resources along the way
     local errorcode="${1:-1}"

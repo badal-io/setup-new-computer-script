@@ -82,7 +82,8 @@ ___.                .___        .__          .__
                                                           
     Q U I C K   S E T U P   S C R I P T
 
-    Largely lifted from Vendasta's script of the same name originally by Joel Kesler, with some additions and modifications
+    Largely lifted from Vendasta's script of the same name originally by Joel Kesler.
+    Modifications (and probably any errors or bugs) by Liam Helmer
 
     NOTE:
     You can exit the script at any time by
