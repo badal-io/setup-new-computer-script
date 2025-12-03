@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: setup-new-computer-script
+  description: This script will help with the quick setup and installation of tools and applications for new developers at Badal-IO. It is designed for macOS and works on both Intel and Apple Silicon machines.
+  annotations:
+    github.com/project-slug: badal-io/setup-new-computer-script
+spec:
+  type: service
+  owner: badal-io
+  lifecycle: experimental
+  tags:
+    - shell
+    - macos
+    - developer-tools
