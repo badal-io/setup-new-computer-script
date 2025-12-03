@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: setup-new-computer-script
+  description: A set of shell scripts for automating the setup of a new developer's computer on macOS.
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs
+spec:
+  type: service
+  lifecycle: production
+  owner: liam.helmer
