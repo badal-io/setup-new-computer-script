@@ -39,6 +39,7 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/badal-io/setup-new-computer-script/tree/main/docs/',
+          routeBasePath: '/',
         },
         blog: false,
         theme: {
@@ -90,7 +91,7 @@ const config: Config = {
           items: [
             {
               label: 'Introduction',
-              to: '/docs/intro',
+              to: '/',
             },
           ],
         },
