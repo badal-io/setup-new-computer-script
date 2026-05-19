@@ -531,6 +531,32 @@ printStep "Cloudflare WARP" "brew install --cask cloudflare-warp"
 printStep "DevPod" "brew install --cask devpod"
 printStep "Container Use" "brew install --cask container-use"
 
+# Communication & collaboration
+printStep "Slack" "brew install --cask slack"
+printStep "Microsoft Teams" "brew install --cask microsoft-teams"
+printStep "Webex" "brew install --cask webex"
+printStep "Zoom" "brew install --cask zoom"
+printStep "Signal" "brew install --cask signal"
+printStep "WhatsApp" "brew install --cask whatsapp"
+printStep "Discord" "brew install --cask discord"
+
+# Productivity / files / Git GUI
+printStep "GitHub Desktop" "brew install --cask github"
+printStep "Obsidian" "brew install --cask obsidian"
+printStep "Google Drive" "brew install --cask google-drive"
+printStep "Adobe Acrobat Reader" "brew install --cask adobe-acrobat-reader"
+
+# AI / local LLM
+printStep "Ollama" "brew install --cask ollama-app"
+
+# Media
+printStep "VLC" "brew install --cask vlc"
+
+# Hardware / drivers / VDI / security keys
+printStep "DisplayLink Manager" "brew install --cask displaylink"
+printStep "Jabra Direct" "brew install --cask jabra-direct"
+printStep "YubiKey Manager" "brew install --cask yubico-yubikey-manager"
+
 # Install Visual Studio Code
 if [[ "${devtoolchoices[0]}" == "+" ]]; then
 	printStep "Visual Studio Code" "brew install --cask visual-studio-code"

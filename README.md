@@ -20,7 +20,8 @@ Versions are **never pinned** — every install resolves to whatever Homebrew, n
 - **Cloud / infra**: Google Cloud SDK, Helm, Podman, Dagger, Crane, Ko, spacectl, Cloudflare CLI, Specify, Terraform, Vault
 - **Data**: Dolt, Neo4j, PostgreSQL 14, nginx
 - **Linters / formatters**: Prettier, shfmt, clang-format, stylua, taplo
-- **Apps**: Firefox, Chrome, Docker, Docker Desktop, Postman, Android Studio + Platform Tools, Inkscape, LocalSend, Cloudflare WARP, DevPod, Container Use
+- **Apps**: Firefox, Chrome, Docker, Docker Desktop, Postman, Android Studio + Platform Tools, Inkscape, LocalSend, Cloudflare WARP, DevPod, Container Use, GitHub Desktop, Obsidian, Google Drive, Adobe Acrobat Reader, VLC, Ollama, DisplayLink Manager, Jabra Direct, YubiKey Manager
+- **Communication**: Slack, Microsoft Teams, Webex, Zoom, Signal, WhatsApp, Discord
 - **AI tooling**: **Claude Code** and **Claude Desktop** (both latest, via brew cask). The TELUS AI plugins marketplace and required/recommended plugins are installed by delegating to [`telus/ai-dev`'s `telus-setup.sh`](https://github.com/telus/ai-dev/blob/main/tools/claude-code/QUICKSTART.md) — requires `gh auth login` or SSH access to `telus/ai-dev`.
 
 The shell profile (`~/.zprofile` / `~/.bash_profile`) is also augmented with: pyenv init + virtualenv-init, `nvm use default` on startup, cargo env, `~/.local/bin` (uv/pipx), optional bun, and `~/bin` on PATH. **No personal API keys or secrets are written** — those stay in your private dotfiles.
