@@ -1,14 +1,14 @@
 #!/bin/bash
 
-VERSION="v3.4.0"
+VERSION="v3.5.0"
 #===============================================================================
 # title           setup-new-computer.sh
-# author          Joel Kesler 
+# author          Joel Kesler
 #                 https://github.com/joelkesler
 #===============================================================================
-#   A shell script to help with the quick setup and installation of tools and 
+#   A shell script to help with the quick setup and installation of tools and
 #   applications for new developers at Vendasta.
-# 
+#
 #   Quick Instructions:
 #
 #   1. Make the script executable:
@@ -19,60 +19,63 @@ VERSION="v3.4.0"
 #
 #   3. Some installs will need your password
 #
-#   4. You will be promted to fill out your git email and name. 
+#   4. You will be promted to fill out your git email and name.
 #      Use the email and name you use for Github
 #
 #   5. Follow the Post Installation Instructions in the Readme:
 README="https://github.com/vendasta/setup-new-computer-script#post-installation-instructions"
-#  
+#
 #===============================================================================
 
-
 # IDEs to make availabe. Please also adjust code to brew cask install
-options[0]="Visual Studio Code";    devtoolchoices[0]="+"
-options[1]="Jetbrains Toolbox";     devtoolchoices[1]=""
-options[2]="Pycharm";               devtoolchoices[2]=""
-options[3]="Goland";                devtoolchoices[3]=""
-options[4]="Webstorm";              devtoolchoices[4]=""
-options[5]="Sublime Text";          devtoolchoices[5]=""
-options[6]="iTerm2";                devtoolchoices[6]=""
-
+options[0]="Visual Studio Code"
+devtoolchoices[0]="+"
+options[1]="Jetbrains Toolbox"
+devtoolchoices[1]=""
+options[2]="Pycharm"
+devtoolchoices[2]=""
+options[3]="Goland"
+devtoolchoices[3]=""
+options[4]="Webstorm"
+devtoolchoices[4]=""
+options[5]="Sublime Text"
+devtoolchoices[5]=""
+options[6]="iTerm2"
+devtoolchoices[6]=""
 
 #===============================================================================
 #  Functions
 #===============================================================================
 
-
 printHeading() {
-    printf "\n\n\n\e[0;36m$1\e[0m \n"
+	printf "\n\n\n\e[0;36m$1\e[0m \n"
 }
 
 printDivider() {
-    printf %"$COLUMNS"s |tr " " "-"
-    printf "\n"
+	printf %"$COLUMNS"s | tr " " "-"
+	printf "\n"
 }
 
 printError() {
-    printf "\n\e[1;31m"
-    printf %"$COLUMNS"s |tr " " "-"
-    if [ -z "$1" ]      # Is parameter #1 zero length?
-    then
-        printf "     There was an error ... somewhere\n"  # no parameter passed.
-    else
-        printf "\n     Error Installing $1\n" # parameter passed.
-    fi
-    printf %"$COLUMNS"s |tr " " "-"
-    printf " \e[0m\n"
+	printf "\n\e[1;31m"
+	printf %"$COLUMNS"s | tr " " "-"
+	if [ -z "$1" ]; then                              # Is parameter #1 zero length?
+		printf "     There was an error ... somewhere\n" # no parameter passed.
+	else
+		printf "\n     Error Installing $1\n" # parameter passed.
+	fi
+	printf %"$COLUMNS"s | tr " " "-"
+	printf " \e[0m\n"
 }
 
 printStep() {
-    printf %"$COLUMNS"s |tr " " "-"
-    printf "\nInstalling $1...\n";
-    $2 || printError "$1"
+	printf %"$COLUMNS"s | tr " " "-"
+	printf "\nInstalling $1...\n"
+	$2 || printError "$1"
 }
 
 printLogo() {
-cat << "EOT"
+	cat <<"EOT"
 ___.                .___        .__          .__          
 \_ |__  _____     __| _/_____   |  |         |__|  ____   
  | __ \ \__  \   / __ | \__  \  |  |   ______|  | /  _ \  
@@ -92,19 +95,19 @@ EOT
 }
 
 showIDEMenuLoop() {
-    # from https://serverfault.com/a/777849
-    printLogo
-    printHeading "Select Optional IDEs and Tools"
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-        echo ""
-        for NUM in "${!options[@]}"; do
-            echo "[""${devtoolchoices[NUM]:- }""]" $(( NUM+1 ))") ${options[NUM]}"
-        done
-        echo ""
+	# from https://serverfault.com/a/777849
+	printLogo
+	printHeading "Select Optional IDEs and Tools"
+	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+	echo ""
+	for NUM in "${!options[@]}"; do
+		echo "[""${devtoolchoices[NUM]:- }""]" $((NUM + 1))") ${options[NUM]}"
+	done
+	echo ""
 }
 
 writetoBashProfile() {
-cat << EOT >> ~/.bash_profile
+	cat <<EOT >>~/.bash_profile
 
 
 # --------------------------------------------------------------------
@@ -161,6 +164,9 @@ export NVM_DIR="\$HOME/.nvm"
 # Increases the default memory limit for Node, so larger Angular projects can be built
 export NODE_OPTIONS=--max_old_space_size=12000
 
+# Activate the nvm default (LTS) on shell start
+[ -s "\$NVM_DIR/nvm.sh" ] && nvm use default --silent >/dev/null 2>&1 || true
+
 # Update Node to selected version and reinstall previous packages
 node-upgrade() {
     new_version=\${1:?"Please specify a version to upgrade to. Example: node-upgrade 20"}
@@ -169,6 +175,28 @@ node-upgrade() {
     # nvm uninstall "\$prev_ver"
     nvm cache clear
 }
+
+# Pyenv (Python version manager)
+export PYENV_ROOT="\$HOME/.pyenv"
+[ -d "\$PYENV_ROOT/bin" ] && export PATH="\$PYENV_ROOT/bin:\$PATH"
+command -v pyenv >/dev/null && eval "\$(pyenv init -)"
+command -v pyenv >/dev/null && pyenv commands 2>/dev/null | grep -q virtualenv-init && eval "\$(pyenv virtualenv-init -)"
+
+# Rust / Cargo
+[ -s "\$HOME/.cargo/env" ] && . "\$HOME/.cargo/env"
+
+# uv / pipx user-installed binaries
+[ -s "\$HOME/.local/bin/env" ] && . "\$HOME/.local/bin/env"
+export PATH="\$HOME/.local/bin:\$PATH"
+
+# Bun (loaded only if installed)
+if [ -d "\$HOME/.bun" ]; then
+    export BUN_INSTALL="\$HOME/.bun"
+    export PATH="\$BUN_INSTALL/bin:\$PATH"
+fi
+
+# Personal bin and project venvs
+export PATH="\$HOME/bin:./venv/bin:\$PATH"
 
 # --------------------------------------------------------------------
 # End autogenerated content from setup-new-computer.sh   $VERSION
@@ -179,7 +207,7 @@ EOT
 }
 
 writetoZshProfile() {
-cat << EOT >> ~/.zprofile
+	cat <<EOT >>~/.zprofile
 
 
 # --------------------------------------------------------------------
@@ -232,6 +260,9 @@ export NVM_DIR="\$HOME/.nvm"
 # Increases the default memory limit for Node, so larger Angular projects can be built
 export NODE_OPTIONS=--max_old_space_size=12000
 
+# Activate the nvm default (LTS) on shell start
+[ -s "\$NVM_DIR/nvm.sh" ] && nvm use default --silent >/dev/null 2>&1 || true
+
 # Update Node to selected version and reinstall previous packages
 node-upgrade() {
     readonly new_version=\${1:?"Please specify a version to upgrade to. Example: node-upgrade 20"}
@@ -241,6 +272,28 @@ node-upgrade() {
     nvm cache clear
 }
 
+# Pyenv (Python version manager)
+export PYENV_ROOT="\$HOME/.pyenv"
+[ -d "\$PYENV_ROOT/bin" ] && export PATH="\$PYENV_ROOT/bin:\$PATH"
+command -v pyenv >/dev/null && eval "\$(pyenv init -)"
+command -v pyenv >/dev/null && pyenv commands 2>/dev/null | grep -q virtualenv-init && eval "\$(pyenv virtualenv-init -)"
+
+# Rust / Cargo
+[ -s "\$HOME/.cargo/env" ] && . "\$HOME/.cargo/env"
+
+# uv / pipx user-installed binaries
+[ -s "\$HOME/.local/bin/env" ] && . "\$HOME/.local/bin/env"
+export PATH="\$HOME/.local/bin:\$PATH"
+
+# Bun (loaded only if installed)
+if [ -d "\$HOME/.bun" ]; then
+    export BUN_INSTALL="\$HOME/.bun"
+    export PATH="\$BUN_INSTALL/bin:\$PATH"
+fi
+
+# Personal bin and project venvs
+export PATH="\$HOME/bin:./venv/bin:\$PATH"
+
 # --------------------------------------------------------------------
 # End autogenerated content from setup-new-computer.sh   $VERSION
 # --------------------------------------------------------------------
@@ -249,9 +302,8 @@ node-upgrade() {
 EOT
 }
 
-
 writetoHuskrc() {
-cat << EOT >> ~/.huskyrc
+	cat <<EOT >>~/.huskyrc
 
 
 # --------------------------------------------------------------------
@@ -273,375 +325,462 @@ export NVM_DIR="\$HOME/.nvm"
 EOT
 }
 
-
 #===============================================================================
 # Installer: Settings
 #===============================================================================
 
-
 # Show IDE Selection Menu
 clear
-while 
-    showIDEMenuLoop && \
-    read -r -e -p "Enable or Disable by typing number. Hit ENTER to continue " \
-    -n1 SELECTION && [[ -n "$SELECTION" ]]; \
+while
+	showIDEMenuLoop &&
+		read -r -e -p "Enable or Disable by typing number. Hit ENTER to continue " \
+			-n1 SELECTION && [[ -n "$SELECTION" ]]
 do
-    clear
-    if [[ "$SELECTION" == *[[:digit:]]* && $SELECTION -ge 1 && $SELECTION -le ${#options[@]} ]]; then
-        (( SELECTION-- ))
-        if [[ "${devtoolchoices[SELECTION]}" == "+" ]]; then
-            devtoolchoices[SELECTION]=""
-        else
-            devtoolchoices[SELECTION]="+"
-        fi
-            ERROR=" "
-    else
-        ERROR="Invalid option: $SELECTION"
-    fi
+	clear
+	if [[ "$SELECTION" == *[[:digit:]]* && $SELECTION -ge 1 && $SELECTION -le ${#options[@]} ]]; then
+		((SELECTION--))
+		if [[ "${devtoolchoices[SELECTION]}" == "+" ]]; then
+			devtoolchoices[SELECTION]=""
+		else
+			devtoolchoices[SELECTION]="+"
+		fi
+		ERROR=" "
+	else
+		ERROR="Invalid option: $SELECTION"
+	fi
 done
 printDivider
-
-
 
 #===============================================================================
 #  Installer: Set up shell profiles
 #===============================================================================
 
-
 # Create .bash_profile and .zprofile if they dont exist
 printHeading "Prep Bash and Zsh"
 printDivider
-    echo "✔ Touch ~/.bash_profile"
-        touch ~/.bash_profile
+echo "✔ Touch ~/.bash_profile"
+touch ~/.bash_profile
 printDivider
-    echo "✔ Touch ~/.zprofile"
-        touch ~/.zprofile
+echo "✔ Touch ~/.zprofile"
+touch ~/.zprofile
 printDivider
-    if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
-        echo "✔ .bash_profile already modified. Skipping"
-    else
-        writetoBashProfile
-        echo "✔ Added to .bash_profile"
-    fi
+if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
+	echo "✔ .bash_profile already modified. Skipping"
+else
+	writetoBashProfile
+	echo "✔ Added to .bash_profile"
+fi
 printDivider
-    # Zsh profile
-    if grep --quiet "setup-new-computer.sh" ~/.zprofile; then
-        echo "✔ .zprofile already modified. Skipping"
-    else
-        writetoZshProfile
-        echo "✔ Added to .zprofile"
-    fi
+# Zsh profile
+if grep --quiet "setup-new-computer.sh" ~/.zprofile; then
+	echo "✔ .zprofile already modified. Skipping"
+else
+	writetoZshProfile
+	echo "✔ Added to .zprofile"
+fi
 printDivider
-    echo "(zsh) Rebuild zcompdump"
-    rm -f ~/.zcompdump
+echo "(zsh) Rebuild zcompdump"
+rm -f ~/.zcompdump
 printDivider
-
 
 #===============================================================================
 #  Installer: Main Payload
 #===============================================================================
 
-
 # Install xcode cli development tools
 printHeading "Installing xcode cli development tools"
 printDivider
-    xcode-select --install && \
-        read -n 1 -r -s -p $'\n\nWhen Xcode cli tools are installed, press ANY KEY to continue...\n\n' || \
-            printDivider && echo "✔ Xcode cli tools already installed. Skipping"
+xcode-select --install &&
+	read -n 1 -r -s -p $'\n\nWhen Xcode cli tools are installed, press ANY KEY to continue...\n\n' ||
+	printDivider && echo "✔ Xcode cli tools already installed. Skipping"
 printDivider
-
 
 # Install Brew
 printHeading "Installing Homebrew"
 printDivider
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 printDivider
-    echo "✔ Setting Path for Homebrew"
-    echo "Path Before:"
-    echo $PATH
+echo "✔ Setting Path for Homebrew"
+echo "Path Before:"
+echo $PATH
 
-    if [[ "$(uname -p)" == "arm" ]]; then
-        # Apple Silicon M1/M2 Macs
-        export PATH=/opt/homebrew/bin:$PATH
-    else
-        # Intel Macs
-        export PATH=/usr/local/bin:$PATH
-    fi
-    
-    echo "Path After:"
-    echo $PATH
-printDivider
-    echo "✔ (zsh) Fix brew insecure directories warning"
-    chmod go-w "$(brew --prefix)/share"
-printDivider
+if [[ "$(uname -p)" == "arm" ]]; then
+	# Apple Silicon M1/M2 Macs
+	export PATH=/opt/homebrew/bin:$PATH
+else
+	# Intel Macs
+	export PATH=/usr/local/bin:$PATH
+fi
 
+echo "Path After:"
+echo $PATH
+printDivider
+echo "✔ (zsh) Fix brew insecure directories warning"
+chmod go-w "$(brew --prefix)/share"
+printDivider
 
 # Install Utilities
-printHeading "Installing Brew Packages"
-    printStep "Bash"                        "brew install bash"
-    printStep "bash-completion"             "brew install bash-completion"
-    printStep "zsh-completions"             "brew install zsh-completions"
-    printStep "Ruby"                        "brew install ruby"
-    printStep "Git"                         "brew install git"
+printHeading "Installing Brew Packages — Shell & Core"
+printStep "Bash" "brew install bash"
+printStep "bash-completion" "brew install bash-completion"
+printStep "zsh-completions" "brew install zsh-completions"
+printStep "Ruby" "brew install ruby"
+printStep "Git" "brew install git"
+printStep "Git LFS" "brew install git-lfs"
+printStep "GitHub CLI" "brew install gh"
+printStep "GNU sed" "brew install gnu-sed"
+printStep "GNU awk" "brew install gawk"
+printStep "coreutils" "brew install coreutils"
+printStep "wget" "brew install wget"
+printStep "yq" "brew install yq"
+printStep "parallel" "brew install parallel"
+printStep "tmux" "brew install tmux"
+printStep "tig" "brew install tig"
+printStep "lazygit" "brew install lazygit"
+printStep "gitleaks" "brew install gitleaks"
+printStep "pwgen" "brew install pwgen"
+printStep "telnet" "brew install telnet"
 printDivider
 
+printHeading "Installing Brew Packages — Language Toolchains & Build"
+printStep "pyenv" "brew install pyenv"
+printStep "uv (Python pkg manager)" "brew install uv"
+printStep "pipx" "brew install pipx"
+printStep "openjdk" "brew install openjdk"
+printStep "Rust (rustup-init via brew)" "brew install rust"
+printStep "Deno" "brew install deno"
+printStep "pnpm" "brew install pnpm"
+printStep "yarn" "brew install yarn"
+printStep "lefthook" "brew install lefthook"
+printStep "mkdocs" "brew install mkdocs"
+printDivider
 
+printHeading "Installing Brew Packages — Cloud, Infra & Containers"
+printStep "Helm" "brew install helm"
+printStep "Podman" "brew install podman"
+printStep "Dagger" "brew install dagger"
+printStep "Crane (container registry tool)" "brew install crane"
+printStep "Ko (Go container builder)" "brew install ko"
+printStep "Spacectl (Spacelift)" "brew install spacelift-io/spacelift/spacectl"
+printStep "Cloudflare CLI" "brew install cloudflare-cli4"
+printStep "Specify" "brew install specify"
+printDivider
+
+printHeading "Installing Brew Packages — Data, ML & Misc"
+printStep "Dolt (versioned SQL)" "brew install dolt"
+printStep "Neo4j" "brew install neo4j"
+printStep "PostgreSQL 14" "brew install postgresql@14"
+printStep "nginx" "brew install nginx"
+printStep "ffmpeg" "brew install ffmpeg"
+printStep "graphviz" "brew install graphviz"
+printStep "pandoc" "brew install pandoc"
+printStep "glow (markdown viewer)" "brew install glow"
+printStep "speedtest-cli" "brew install speedtest-cli"
+printStep "Slackdump" "brew install slackdump"
+printStep "Google Workspace CLI" "brew install googleworkspace-cli"
+printStep "JWT CLI" "brew install jwt-cli"
+printDivider
+
+printHeading "Installing Brew Packages — Linters & Formatters"
+printStep "Prettier" "brew install prettier"
+printStep "Black (Python formatter)" "brew install black"
+printStep "shfmt (shell formatter)" "brew install shfmt"
+printStep "clang-format" "brew install clang-format"
+printStep "stylua (Lua formatter)" "brew install stylua"
+printStep "taplo (TOML toolkit)" "brew install taplo"
+printDivider
 
 # Install  Apps
 printHeading "Installing Applications"
 
-    if [[ -d "/Applications/Firefox.app" ]]; then
-        printDivider
-        echo "✔ Firefox already installed. Skipping"
-    else
-        printStep "Firefox"                     "brew install --cask firefox"
-    fi
+if [[ -d "/Applications/Firefox.app" ]]; then
+	printDivider
+	echo "✔ Firefox already installed. Skipping"
+else
+	printStep "Firefox" "brew install --cask firefox"
+fi
 
-    if [[ -d "/Applications/Google Chrome.app" ]]; then
-        printDivider
-        echo "✔ Google Chrome already installed. Skipping"
-    else
-        printStep "Google Chrome"               "brew install --cask google-chrome"
-    fi
+if [[ -d "/Applications/Google Chrome.app" ]]; then
+	printDivider
+	echo "✔ Google Chrome already installed. Skipping"
+else
+	printStep "Google Chrome" "brew install --cask google-chrome"
+fi
 
-    if [[ -d "/Applications/Docker.app" ]]; then
-        printDivider
-        echo "✔ Docker already installed. Skipping"
-    else
-        printStep "Docker for Mac"              "brew install --cask docker"
-    fi
+if [[ -d "/Applications/Docker.app" ]]; then
+	printDivider
+	echo "✔ Docker already installed. Skipping"
+else
+	printStep "Docker for Mac" "brew install --cask docker"
+fi
 
-    if [[ -d "/Applications/Postman.app" ]]; then
-        printDivider
-        echo "✔ Postman already installed. Skipping"
-    else
-        printStep "Postman"                     "brew install --cask postman"
-    fi
+if [[ -d "/Applications/Postman.app" ]]; then
+	printDivider
+	echo "✔ Postman already installed. Skipping"
+else
+	printStep "Postman" "brew install --cask postman"
+fi
 
-    # Install Visual Studio Code
-    if [[ "${devtoolchoices[0]}" == "+" ]]; then
-        printStep "Visual Studio Code"      "brew install --cask visual-studio-code"
-    fi
-    # Install Jetbrains Toolbox
-    if [[ "${devtoolchoices[1]}" == "+" ]]; then
-        printStep "Jetbrains Toolbox"       "brew install --cask jetbrains-toolbox"
-    fi
-    # Install PyCharm
-    if [[ "${devtoolchoices[2]}" == "+" ]]; then
-        printStep "PyCharm"                 "brew install --cask pycharm"
-    fi
-    # Install Goland
-    if [[ "${devtoolchoices[3]}" == "+" ]]; then
-        printStep "Goland"                  "brew install --cask goland"
-    fi
-    # Install WebStorm
-    if [[ "${devtoolchoices[4]}" == "+" ]]; then
-        printStep "WebStorm"                "brew install --cask webstorm"
-    fi
-    # Install Sublime Text
-    if [[ "${devtoolchoices[5]}" == "+" ]]; then
-        printStep "Sublime Text"            "brew install --cask sublime-text"
-    fi
-    # Install iTerm2
-    if [[ "${devtoolchoices[6]}" == "+" ]]; then
-        printStep "iTerm2"                  "brew install --cask iterm2"
-    fi
+# Additional desktop/dev apps (idempotent — brew install --cask is a no-op if present)
+printStep "Docker Desktop" "brew install --cask docker-desktop"
+printStep "Android Platform Tools" "brew install --cask android-platform-tools"
+printStep "Android Studio" "brew install --cask android-studio"
+printStep "Inkscape" "brew install --cask inkscape"
+printStep "LocalSend" "brew install --cask localsend"
+printStep "Cloudflare WARP" "brew install --cask cloudflare-warp"
+printStep "DevPod" "brew install --cask devpod"
+printStep "Container Use" "brew install --cask container-use"
+
+# Install Visual Studio Code
+if [[ "${devtoolchoices[0]}" == "+" ]]; then
+	printStep "Visual Studio Code" "brew install --cask visual-studio-code"
+fi
+# Install Jetbrains Toolbox
+if [[ "${devtoolchoices[1]}" == "+" ]]; then
+	printStep "Jetbrains Toolbox" "brew install --cask jetbrains-toolbox"
+fi
+# Install PyCharm
+if [[ "${devtoolchoices[2]}" == "+" ]]; then
+	printStep "PyCharm" "brew install --cask pycharm"
+fi
+# Install Goland
+if [[ "${devtoolchoices[3]}" == "+" ]]; then
+	printStep "Goland" "brew install --cask goland"
+fi
+# Install WebStorm
+if [[ "${devtoolchoices[4]}" == "+" ]]; then
+	printStep "WebStorm" "brew install --cask webstorm"
+fi
+# Install Sublime Text
+if [[ "${devtoolchoices[5]}" == "+" ]]; then
+	printStep "Sublime Text" "brew install --cask sublime-text"
+fi
+# Install iTerm2
+if [[ "${devtoolchoices[6]}" == "+" ]]; then
+	printStep "iTerm2" "brew install --cask iterm2"
+fi
 printDivider
-
 
 #Install Go
 # TODO: check with @cpenner about current best way to install
 printHeading "Installing Go"
-    printDivider
-        echo "✔ Creating Go directory in home folder [~/go]"
-            mkdir -p ~/go
-    printStep "Go"            "brew install go"
-    printDivider
-        echo "✔ Setting GOPRIVATE enviromental variable"
-            go env -w GOPRIVATE="github.com/vendasta"
 printDivider
-
+echo "✔ Creating Go directory in home folder [~/go]"
+mkdir -p ~/go
+printStep "Go" "brew install go"
+printDivider
+echo "✔ Setting GOPRIVATE enviromental variable"
+go env -w GOPRIVATE="github.com/vendasta"
+printDivider
 
 # Install Node
 printHeading "Installing Node and Angular CLI through NVM"
-    printDivider
-        getLastestNVM() {
-            # From https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
-            # Get latest release from GitHub api | Get tag line | Pluck JSON value
-            curl --silent "https://api.github.com/repos/nvm-sh/nvm/releases/latest" | 
-                grep '"tag_name":' |
-                sed -E 's/.*"([^"]+)".*/\1/'
-        }
-        echo "✔ Current NVM is $(getLastestNVM)"
-    printDivider
-        echo "Installing NVM (Node Version Manager) $(getLastestNVM)..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$(getLastestNVM)/install.sh | bash
-    printDivider
-        echo "✔ Loading NVM into PATH"
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    printDivider
-        echo "Installing Node..."
-        nvm install 20
-    printStep "Angular CLI"             "npm install --location=global @angular/cli"
-    printStep "NX"                      "npm install --location=global nx"
-    printStep "Husky"                   "npm install --location=global husky"
-    printStep "Node Sass"               "npm install --location=global node-sass"
-    printStep "Node Gyp"                "npm install --location=global node-gyp"
-    printDivider
-        echo "✔ Touch ~/.huskyrc"
-            touch ~/.huskyrc
-    printDivider
-        # Husky profile
-        if grep --quiet "nvm" ~/.huskyrc; then
-            echo "✔ .huskyrc already includes nvm. Skipping"
-        else
-            writetoHuskrc
-            echo "✔ Add nvm to .huskyrc"
-        fi
+printDivider
+getLastestNVM() {
+	# From https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
+	# Get latest release from GitHub api | Get tag line | Pluck JSON value
+	curl --silent "https://api.github.com/repos/nvm-sh/nvm/releases/latest" |
+		grep '"tag_name":' |
+		sed -E 's/.*"([^"]+)".*/\1/'
+}
+echo "✔ Current NVM is $(getLastestNVM)"
+printDivider
+echo "Installing NVM (Node Version Manager) $(getLastestNVM)..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$(getLastestNVM)/install.sh | bash
+printDivider
+echo "✔ Loading NVM into PATH"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+printDivider
+echo "Installing the latest Node LTS via nvm..."
+nvm install --lts
+nvm alias default 'lts/*'
+nvm use --lts
+printStep "Angular CLI" "npm install --location=global @angular/cli"
+printStep "NX" "npm install --location=global nx"
+printStep "Husky" "npm install --location=global husky"
+printStep "Node Sass" "npm install --location=global node-sass"
+printStep "Node Gyp" "npm install --location=global node-gyp"
+printStep "create-docusaurus (scaffolder)" "npm install --location=global create-docusaurus"
+printStep "Gemini CLI" "npm install --location=global @google/gemini-cli"
+printDivider
+echo "✔ Touch ~/.huskyrc"
+touch ~/.huskyrc
+printDivider
+# Husky profile
+if grep --quiet "nvm" ~/.huskyrc; then
+	echo "✔ .huskyrc already includes nvm. Skipping"
+else
+	writetoHuskrc
+	echo "✔ Add nvm to .huskyrc"
+fi
 printDivider
 
+# Install latest stable Python via pyenv (pyenv was installed in the brew step above)
+printHeading "Installing latest stable Python via pyenv"
+printDivider
+if command -v pyenv >/dev/null 2>&1; then
+	# Make sure pyenv shims are on PATH for the rest of this script
+	export PYENV_ROOT="$HOME/.pyenv"
+	[ -d "$PYENV_ROOT/bin" ] && export PATH="$PYENV_ROOT/bin:$PATH"
+	eval "$(pyenv init -)"
+
+	# Resolve the highest 3.x.y release (strips alpha/beta/rc/dev tags)
+	LATEST_PYTHON=$(pyenv install --list | awk '/^[[:space:]]*3\.[0-9]+\.[0-9]+$/' | tail -1 | tr -d ' ')
+	if [ -n "$LATEST_PYTHON" ]; then
+		echo "✔ Latest stable CPython is $LATEST_PYTHON"
+		printStep "Python $LATEST_PYTHON" "pyenv install -s $LATEST_PYTHON"
+		pyenv global "$LATEST_PYTHON" && echo "✔ pyenv global set to $LATEST_PYTHON"
+	else
+		printError "Could not determine latest Python via pyenv"
+	fi
+else
+	printError "pyenv not on PATH after brew install — skipping Python install"
+fi
+printDivider
+
+# Install AI assistants (Claude Code + Claude Desktop, latest)
+printHeading "Installing Claude Code and Claude Desktop (latest)"
+printStep "Claude Code" "brew install --cask claude-code"
+printStep "Claude Desktop" "brew install --cask claude"
+printDivider
 
 # Install Google Cloud SDK and Components
 printHeading "Install Google Cloud SDK and Components"
-    printStep "Google Cloud SDK"        "brew install --cask google-cloud-sdk"
-    printDivider
-        echo "✔ Prepping Autocompletes and Paths"
-        source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-        source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
-    printDivider
-        if [ -e ~/google-cloud-sdk ]; then
-            echo "✔ ~/google-cloud-sdk exists. Skipping"
-        else
-            echo "✔ Creating ~/google-cloud-sdk symlink"
-            ln -s "$(brew --prefix)/Caskroom/google-cloud-sdk" ~/google-cloud-sdk &>/dev/null
-            # make a convenience symlink at the install path for google-cloud-sdk when installed manually
-        fi
-    printStep "App Engine - Go"             "gcloud components install app-engine-go --quiet"
-    printStep "App Engine - Python"         "gcloud components install app-engine-python --quiet"
-    printStep "App Engine - Python Extras"  "gcloud components install app-engine-python-extras --quiet"
-    printStep "Kubectl"                     "gcloud components install kubectl --quiet"
-    printStep "Docker Credentials"          "gcloud components install docker-credential-gcr --quiet"
+printStep "Google Cloud SDK" "brew install --cask google-cloud-sdk"
 printDivider
-
+echo "✔ Prepping Autocompletes and Paths"
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
+printDivider
+if [ -e ~/google-cloud-sdk ]; then
+	echo "✔ ~/google-cloud-sdk exists. Skipping"
+else
+	echo "✔ Creating ~/google-cloud-sdk symlink"
+	ln -s "$(brew --prefix)/Caskroom/google-cloud-sdk" ~/google-cloud-sdk &>/dev/null
+	# make a convenience symlink at the install path for google-cloud-sdk when installed manually
+fi
+printStep "App Engine - Go" "gcloud components install app-engine-go --quiet"
+printStep "App Engine - Python" "gcloud components install app-engine-python --quiet"
+printStep "App Engine - Python Extras" "gcloud components install app-engine-python-extras --quiet"
+printStep "Kubectl" "gcloud components install kubectl --quiet"
+printStep "Docker Credentials" "gcloud components install docker-credential-gcr --quiet"
+printDivider
 
 # Install System Tweaks
 printHeading "System Tweaks"
-    printDivider
-    echo "✔ General: Expand save and print panel by default"
-        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
-    echo "✔ General: Save to disk (not to iCloud) by default"
-        defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-    echo "✔ General: Avoid creating .DS_Store files on network volumes"
-        defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-    printDivider
-        
-    echo "✔ Typing: Disable smart quotes and dashes as they cause problems when typing code"
-        defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-        defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-    echo "✔ Typing: Disable press-and-hold for keys in favor of key repeat"
-        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-    printDivider
-
-    echo "✔ Finder: Show status bar and path bar"
-        defaults write com.apple.finder ShowStatusBar -bool true
-        defaults write com.apple.finder ShowPathbar -bool true
-    echo "✔ Finder: Disable the warning when changing a file extension"
-        defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-    echo "✔ Finder: Show the ~/Library folder"
-        chflags nohidden ~/Library
-    printDivider
-        
-    echo "✔ Safari: Enable Safari’s Developer Settings"
-        defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-        defaults write com.apple.Safari IncludeDevelopMenu -bool true
-        defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-        defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-        defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
-    printDivider
-    
-    # Note: The chrome defaults can cause your Chrome browser to display a message stating
-    # that Chrome is "Managed by your organization" when it isn't
-    # 
-    # To view policies that are affecting this message, view the following pages:
-    # chrome://policy and chrome://management/
-    # 
-    # To quickly remove Chrome default overrides, run the following commands:
-    # defaults delete com.google.Chrome
-    # defaults delete com.google.Chrome.canary
-    #
-    echo "✔ Chrome: Disable the all too sensitive backswipe on Trackpads and Magic Mice"
-        defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
-    echo "✔ Chrome: Use the system print dialog and expand dialog by default"
-        defaults write com.google.Chrome DisablePrintPreview -bool true
-        defaults write com.google.Chrome.canary DisablePrintPreview -bool true
-        defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-        defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
+printDivider
+echo "✔ General: Expand save and print panel by default"
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+echo "✔ General: Save to disk (not to iCloud) by default"
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+echo "✔ General: Avoid creating .DS_Store files on network volumes"
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 printDivider
 
+echo "✔ Typing: Disable smart quotes and dashes as they cause problems when typing code"
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+echo "✔ Typing: Disable press-and-hold for keys in favor of key repeat"
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+printDivider
 
+echo "✔ Finder: Show status bar and path bar"
+defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+echo "✔ Finder: Disable the warning when changing a file extension"
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+echo "✔ Finder: Show the ~/Library folder"
+chflags nohidden ~/Library
+printDivider
+
+echo "✔ Safari: Enable Safari’s Developer Settings"
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+printDivider
+
+# Note: The chrome defaults can cause your Chrome browser to display a message stating
+# that Chrome is "Managed by your organization" when it isn't
+#
+# To view policies that are affecting this message, view the following pages:
+# chrome://policy and chrome://management/
+#
+# To quickly remove Chrome default overrides, run the following commands:
+# defaults delete com.google.Chrome
+# defaults delete com.google.Chrome.canary
+#
+echo "✔ Chrome: Disable the all too sensitive backswipe on Trackpads and Magic Mice"
+defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
+echo "✔ Chrome: Use the system print dialog and expand dialog by default"
+defaults write com.google.Chrome DisablePrintPreview -bool true
+defaults write com.google.Chrome.canary DisablePrintPreview -bool true
+defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
+defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
+printDivider
 
 #===============================================================================
 #  Installer: Git
 #===============================================================================
 
-
 # Set up Git
 printHeading "Set Up Git"
 
 printDivider
-    echo "✔ Set Git to store credentials in Keychain"
-    git config --global credential.helper osxkeychain
+echo "✔ Set Git to store credentials in Keychain"
+git config --global credential.helper osxkeychain
 printDivider
-    if [ -n "$(git config --global user.email)" ]; then
-        echo "✔ Git email is set to $(git config --global user.email)"
-    else
-        read -p 'What is your Git email address?: ' gitEmail
-        git config --global user.email "$gitEmail"
-    fi
+if [ -n "$(git config --global user.email)" ]; then
+	echo "✔ Git email is set to $(git config --global user.email)"
+else
+	read -p 'What is your Git email address?: ' gitEmail
+	git config --global user.email "$gitEmail"
+fi
 printDivider
-    if [ -n "$(git config --global user.name)" ]; then
-        echo "✔ Git display name is set to $(git config --global user.name)"
-    else
-        read -p 'What is your Git display name (Firstname Lastname)?: ' gitName
-        git config --global user.name "$gitName"
-    fi
+if [ -n "$(git config --global user.name)" ]; then
+	echo "✔ Git display name is set to $(git config --global user.name)"
+else
+	read -p 'What is your Git display name (Firstname Lastname)?: ' gitName
+	git config --global user.name "$gitName"
+fi
 ## Disabled: this disrupts the second part of the script
 #printDivider
 #    echo "✔ Configure git to always ssh when dealing with https github repos"
 #        git config --global url."git@github.com:".insteadOf https://github.com/
 #        # you can remove this change by editing your ~/.gitconfig file
 printDivider
-    echo "✔ Creating .ssh directory in home folder [~/.ssh]"
-        mkdir -p ~/go
+echo "✔ Creating .ssh directory in home folder [~/.ssh]"
+mkdir -p ~/go
 printDivider
-    echo "✔ Adding github.com to known_hosts file [~/.ssh/known_hosts]"
-        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+echo "✔ Adding github.com to known_hosts file [~/.ssh/known_hosts]"
+ssh-keyscan -t rsa github.com >>~/.ssh/known_hosts
 printDivider
 
 #===============================================================================
 # Badal.io specific steps
 #===============================================================================
 
-exitscript () {
-    # Exit the script with an error, cleaning up resources along the way
-    local errorcode="${1:-1}"
-    shift
-    echo "     Error: $@\n"
-    exit $errorcode
+exitscript() {
+	# Exit the script with an error, cleaning up resources along the way
+	local errorcode="${1:-1}"
+	shift
+	echo "     Error: $@\n"
+	exit $errorcode
 }
 
 printHeading "Specific installation steps for badal.io"
 
 printDivider
-    git clone https://github.com/badal-io/setup-new-computer-script.git || exitscript 1 "Can't grab badal specific script with git!"
-    . setup-new-computer-script/badal-io.sh || exitscript 1 "error executing badal-io.sh"
+git clone https://github.com/badal-io/setup-new-computer-script.git || exitscript 1 "Can't grab badal specific script with git!"
+. setup-new-computer-script/badal-io.sh || exitscript 1 "error executing badal-io.sh"
 
 #===============================================================================
 #  Installer: Complete
@@ -651,7 +790,7 @@ printHeading "Script Complete"
 printDivider
 
 tput setaf 2 # set text color to green
-cat << "EOT"
+cat <<"EOT"
 
    ╭─────────────────────────────────────────────────────────────────╮
    │░░░░░░░░░░░░░░░░░░░░░░░░░░░ Next Steps ░░░░░░░░░░░░░░░░░░░░░░░░░░│
@@ -679,6 +818,5 @@ echo ""
 echo "Please open a new terminal window to continue your setup steps"
 echo ""
 echo ""
-
 
 exit
