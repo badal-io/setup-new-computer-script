@@ -479,6 +479,8 @@ printStep "speedtest-cli" "brew install speedtest-cli"
 printStep "Slackdump" "brew install slackdump"
 printStep "Google Workspace CLI" "brew install googleworkspace-cli"
 printStep "JWT CLI" "brew install jwt-cli"
+printStep "ykman (YubiKey Manager CLI)" "brew install ykman"
+printStep "pam-u2f (U2F PAM module)" "brew install pam-u2f"
 printDivider
 
 printHeading "Installing Brew Packages — Linters & Formatters"
